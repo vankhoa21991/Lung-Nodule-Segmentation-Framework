@@ -253,6 +253,7 @@ class FindLunaNodule(nn.Module):
                 break
             anns = pl.query(pl.Annotation).join(pl.Scan).filter(pl.Scan.series_instance_uid == item).all()
             CT = pl.query(pl.Scan).filter(pl.Scan.series_instance_uid == item).first()
+            print(f'item:{item},len:{len(anns)}')
             if mode is not None:
                 vol = CT.to_volume(verbose=False)
                 vol = self.lumTrans(vol)
@@ -268,6 +269,10 @@ class FindLunaNodule(nn.Module):
                                   mhd_origin_spacing['originZ'][idx]], dtype=np.float64)
             mhdSpacing = np.array([mhd_origin_spacing['spacingX'][idx], mhd_origin_spacing['spacingY'][idx],
                                    mhd_origin_spacing['spacingZ'][idx]], dtype=np.float64)
+
+            print(f'item:{item},spacing:{spacing},slice_thickness:{slice_thickness},pixel_spacing:{pixel_spacing},')
+            print(f'mhdOrigin:{mhdOrigin},mhdSpacing:{mhdSpacing}')
+
             for row in count[item]:
                 xyz = np.array([data['coordX'][row], data['coordY'][row], data['coordZ'][row]], dtype=np.float64)
                 xyz = np.round(self.worldToVoxelCoord(xyz[::-1], mhdOrigin, mhdSpacing)[::-1], 2)
@@ -296,7 +301,7 @@ class FindLunaNodule(nn.Module):
                             if diffx <= bias and diffy <= bias and diffz < bias:
                                 ann_ex.append(k)
                                 one_nodule.append(ann)
-
+                print(one_nodule, len(one_nodule))
                 # todo 保存不同掩码均值属性,获取该结节的相关属性信息
                 result, noduleSize, avgDiameter, features, centroid = self.mix(one_nodule, data['diameter_mm'][row])
 
@@ -378,22 +383,20 @@ class FindLunaNodule(nn.Module):
         np.save(lesion_name, lesion)
         print(name)
 
-    def __init__(self, mode=None):
+    def __init__(self, mode=None, num_thread=1):
         super(FindLunaNodule, self).__init__()
-        if mode == '-1':
-            logs(f'lidc prepare {config.mode}')
-        else:  # 非LIDC数据集
-            logs(f'luna prepare {config.mode}')
-            self.dirInit()
-            if mode is not None:
-                pool = Pool(multiprocessing.cpu_count())  # 开启线程池
-                func = partial(self.main, mode=mode)
-                N = 34  # 线程数
-                _ = pool.map(func, range(N))
-                pool.close()  # 关闭线程池
-                pool.join()
-            else:  # 统计信息
-                self.main(-1, mode)
+
+        logs(f'luna prepare {config.mode}')
+        self.dirInit()
+        if num_thread > 1:
+            pool = Pool(multiprocessing.cpu_count())  # 开启线程池
+            func = partial(self.main, mode=mode)
+            N = 34  # 线程数
+            _ = pool.map(func, range(N))
+            pool.close()  # 关闭线程池
+            pool.join()
+        else:  # 统计信息
+            self.main(-1, mode)
 
 def generate_spacing_mhd():
     if os.path.exists(f'{config.csv_path}/MhdOriginAndSpacing.csv'):
