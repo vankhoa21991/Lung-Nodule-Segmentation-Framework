@@ -254,9 +254,9 @@ class FindLunaNodule(nn.Module):
             anns = pl.query(pl.Annotation).join(pl.Scan).filter(pl.Scan.series_instance_uid == item).all()
             CT = pl.query(pl.Scan).filter(pl.Scan.series_instance_uid == item).first()
             print(f'item:{item},len:{len(anns)}')
-            if mode is not None:
-                vol = CT.to_volume(verbose=False)
-                vol = self.lumTrans(vol)
+            # if mode is not None:
+            #     vol = CT.to_volume(verbose=False)
+            #     vol = self.lumTrans(vol)
 
             spacing = CT.spacings
             slice_thickness = CT.slice_thickness
@@ -269,13 +269,15 @@ class FindLunaNodule(nn.Module):
                                   mhd_origin_spacing['originZ'][idx]], dtype=np.float64)
             mhdSpacing = np.array([mhd_origin_spacing['spacingX'][idx], mhd_origin_spacing['spacingY'][idx],
                                    mhd_origin_spacing['spacingZ'][idx]], dtype=np.float64)
+            mhdSize = np.array([mhd_origin_spacing['sizeX'][idx], mhd_origin_spacing['sizeY'][idx],
+                                 mhd_origin_spacing['sizeZ'][idx]], dtype=np.float64)
 
             print(f'item:{item},spacing:{spacing},slice_thickness:{slice_thickness},pixel_spacing:{pixel_spacing},')
-            print(f'mhdOrigin:{mhdOrigin},mhdSpacing:{mhdSpacing}')
+            print(f'mhdOrigin:{mhdOrigin},mhdSpacing:{mhdSpacing},mhdSize:{mhdSize}')
 
             for row in count[item]:
                 xyz = np.array([data['coordX'][row], data['coordY'][row], data['coordZ'][row]], dtype=np.float64)
-                xyz = np.round(self.worldToVoxelCoord(xyz[::-1], mhdOrigin, mhdSpacing)[::-1], 2)
+                xyz = np.round(self.worldToVoxelCoord(xyz, mhdOrigin, mhdSpacing), 2)
                 x, y, z = xyz[0], xyz[1], xyz[2]
 
                 one_nodule = []
