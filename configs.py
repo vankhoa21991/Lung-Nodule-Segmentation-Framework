@@ -100,8 +100,8 @@ class GC(nn.Module):
 """  
 添加属性后需要在trainBase进行添加 
 """
-train = False
-dataset = 'lidc'
+train = True
+dataset = 'luna'
 log_name = 'eva'
 mode = '3d'  # 2d,3d
 device = 'cuda:0'  #

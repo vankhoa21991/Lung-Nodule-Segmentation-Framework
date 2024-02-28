@@ -49,8 +49,9 @@ class trainBase(GC):
 
     def __init__(self, model2d, model3d, lossList):
         super(trainBase, self).__init__(train=configs.train, dataset=configs.dataset, log_name=configs.log_name,
-                                        mode=configs.mode, pathV=configs.pathV, LossV=configs.LossV,
-                                        FileV=configs.FileV, MetricsV=configs.MetricsV, sup=configs.sup,
+                                        mode=configs.mode,
+                                        # pathV=configs.pathV, LossV=configs.LossV,
+                                        # FileV=configs.FileV, MetricsV=configs.MetricsV, sup=configs.sup,
                                         server=configs.server)
         self.model2d = model2d
         self.model3d = model3d
