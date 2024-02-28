@@ -6,7 +6,7 @@
 import os
 import time
 
-import ml_collections
+# import ml_collections
 import torch
 
 ## PARAMETERS OF THE MODEL
