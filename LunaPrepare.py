@@ -229,10 +229,10 @@ class FindLunaNodule(nn.Module):
 
     def main(self, idx, mode=None):
         data = pd.read_csv(f'/mnt/datalake/DataLibrary/opendata/lung/LUNA16/LUNA16/CSVFILES/annotations.csv', header=0)  # 加载luna16结节信息
-        # mhd_origin_spacing = pd.read_csv(f'{config.csv_path}/MhdOriginAndSpaving.csv', header=0)
+        mhd_origin_spacing = pd.read_csv(f'{config.csv_path}/MhdOriginAndSpacing.csv', header=0)
 
         count = self.findAllRow(data)  # 统计id下的所有结节数量
-        # orgins_count = self.findAllRow(mhd_origin_spacing)
+        orgins_count = self.findAllRow(mhd_origin_spacing)
 
         attrs = []
         # todo 对相应点的结节进行掩码聚类
@@ -396,17 +396,20 @@ class FindLunaNodule(nn.Module):
                 self.main(-1, mode)
 
 def generate_spacing_mhd():
+    if os.path.exists(f'{config.csv_path}/MhdOriginAndSpacing.csv'):
+        return
+
     image_paths = glob.glob('/mnt/datalake/DataLibrary/opendata/lung/LUNA16/LUNA16/' + 'subset*/*.mhd')
     spacing = []
     origin = []
     size = []
     uids = []
-    for path in image_paths:
+    for path in tqdm(image_paths):
         uid = path.split('/')[-1].split('.mhd')[0]
         itkimage = sitk.ReadImage(path)
-        numpyOrigin = np.array(list(reversed(itkimage.GetOrigin())))
-        numpySpacing = np.array(list(reversed(itkimage.GetSpacing())))
-        numpySize = np.array(list(reversed(itkimage.GetSize())))
+        numpyOrigin = np.array(list(itkimage.GetOrigin()))
+        numpySpacing = np.array(list(itkimage.GetSpacing()))
+        numpySize = np.array(list(itkimage.GetSize()))
         spacing.append(numpySpacing)
         origin.append(numpyOrigin)
         size.append(numpySize)
