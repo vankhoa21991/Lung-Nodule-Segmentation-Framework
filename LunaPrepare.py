@@ -254,9 +254,9 @@ class FindLunaNodule(nn.Module):
             anns = pl.query(pl.Annotation).join(pl.Scan).filter(pl.Scan.series_instance_uid == item).all()
             CT = pl.query(pl.Scan).filter(pl.Scan.series_instance_uid == item).first()
             print(f'item:{item},len:{len(anns)}')
-            # if mode is not None:
-            #     vol = CT.to_volume(verbose=False)
-            #     vol = self.lumTrans(vol)
+            if mode is not None:
+                vol = CT.to_volume(verbose=False)
+                vol = self.lumTrans(vol)
 
             spacing = CT.spacings
             slice_thickness = CT.slice_thickness
@@ -385,7 +385,7 @@ class FindLunaNodule(nn.Module):
         np.save(lesion_name, lesion)
         print(name)
 
-    def __init__(self, mode=None, num_thread=1):
+    def __init__(self, mode=None, num_thread=2):
         super(FindLunaNodule, self).__init__()
 
         logs(f'luna prepare {config.mode}')
@@ -437,7 +437,7 @@ if __name__ == '__main__':
 
     generate_spacing_mhd()
 
-    mode = '3d'
+    mode = '2d'
     print(mode)
     start_time = time.time()
     FindLunaNodule(mode).to('cuda:0')
