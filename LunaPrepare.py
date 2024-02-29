@@ -347,8 +347,8 @@ class FindLunaNodule(nn.Module):
         img = resample2d(img, spacing=spacing[:2])
         msk = resample2d(msk, spacing=spacing[:2], is_seg=True)
 
-        img = img_crop_or_fill(img, 'twoD')
-        mask = img_crop_or_fill(msk, 'twoD')
+        img = img_crop_or_fill(img, '2d')
+        mask = img_crop_or_fill(msk, '2d')
 
         while True:
             randomN = random.randint(0, 100)
@@ -385,7 +385,7 @@ class FindLunaNodule(nn.Module):
         np.save(lesion_name, lesion)
         print(name)
 
-    def __init__(self, mode=None, num_thread=2):
+    def __init__(self, mode=None, num_thread=1):
         super(FindLunaNodule, self).__init__()
 
         logs(f'luna prepare {config.mode}')

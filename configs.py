@@ -37,8 +37,8 @@ class GC(nn.Module):
     sup = False  # 深监督学习
     """超参数"""
     device = None
-    num_worker = 4
-    epochs = 600
+    num_worker = 8
+    epochs = 2
     show = False
     val_domain = 0.2
     train_domain = 0.8

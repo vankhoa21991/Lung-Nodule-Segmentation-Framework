@@ -196,6 +196,7 @@ class trainBase(GC):
         model.eval()
         metrics = []
         os.makedirs(self.pred_path, exist_ok=True)
+        losses = []
         with torch.no_grad():
             for idx, data in tqdm(enumerate(loader)):
                 img, msk = data['img'], data['msk']
@@ -208,9 +209,9 @@ class trainBase(GC):
 
                 preds = model(img)
                 loss = loss_fn(preds, msk)
+                losses.append(loss.item())
 
-        metrics = np.asarray(metrics, np.float32)
-        eStop(np.mean(metrics), model, ep, self.model_name, self.optimizer, self.loss_name)
+        eStop(np.mean(losses), model, ep, self.model_name, self.optimizer, self.loss_name)
         model.train()
 
     def testFun(self, k_fold, loader, model, mode='infer'):
