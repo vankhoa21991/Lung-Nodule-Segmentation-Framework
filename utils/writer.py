@@ -141,7 +141,13 @@ class Writer(object):
         return arr
 
     def update(self, model_name):
-        data = self.reshape([self.precision, self.sensitivity, self.dsc, self.mIou])
+        # data = self.reshape([self.precision, self.sensitivity, self.dsc, self.mIou])
+        data = {
+            'precision': self.precision,
+            'sensitivity': self.sensitivity,
+            'dsc': self.dsc,
+            'mIou': self.mIou
+        }
 
         logs(f'model name {model_name}, len {len(data)} and data len == 6 {len(data) == 6}')
         print(data)
@@ -150,7 +156,7 @@ class Writer(object):
         self.clear(True)
 
     def save(self, model_name):
-        df = pd.DataFrame(self.dict)
+        df = pd.DataFrame(self.dict[f"{model_name}"])
         '''
             保存 其中一个模型的三种不同loss的各项精度指标
             依次是 精度，敏感度，dice，miou的五折分数及平均值

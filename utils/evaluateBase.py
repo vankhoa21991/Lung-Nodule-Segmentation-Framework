@@ -64,10 +64,14 @@ class evaluateBase(GC):
         return fprecision, fsensitivity, ff1, fmIou
 
     def initNetwork(self, k, label):
-        if self.mode == '2d':
-            model = get_model2d(self.model_name, self.device)
-        else:
-            model = get_model3d(self.model_name, self.device)
+        try:
+            if self.mode == '2d':
+                model = get_model2d(self.model_name, self.device)
+            else:
+                model = get_model3d(self.model_name, self.device)
+        except Exception as e:
+            logs(f'Error {e}')
+            return None, None
 
         train_list = []
         val_and_test_list = []
@@ -84,7 +88,7 @@ class evaluateBase(GC):
 
         if len(val_and_test_list) != 0:
 
-            val_and_test_dataset = noduleSet(val_and_test_list, ['infer', 'Val'], None, self.show)
+            val_and_test_dataset = noduleSet(val_and_test_list, self.mode, None, show=False)
 
             val_and_test_iter = DataLoader(val_and_test_dataset, batch_size=self.val_and_test_batch_size,
                                            num_workers=self.num_worker, pin_memory=True, shuffle=False, drop_last=True)

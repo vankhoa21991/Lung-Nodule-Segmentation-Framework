@@ -261,25 +261,29 @@ class trainBase(GC):
         for model in self.models:
             self.model_name = model
             for loss in self.lossList:
-                self.loss_name = loss
-                start_time = time.time()
+                try:
+                    self.loss_name = loss
+                    start_time = time.time()
 
-                precision, sensitivity, f1, mIou, train_times, infer_times, oc = [], [], [], [], [], [], []
-                eltSet = [precision, sensitivity, f1, mIou, train_times, infer_times, oc]
+                    precision, sensitivity, f1, mIou, train_times, infer_times, oc = [], [], [], [], [], [], []
+                    eltSet = [precision, sensitivity, f1, mIou, train_times, infer_times, oc]
 
-                for i in range(1, self.k_fold + 1):
-                    logs(f'Fold {i}')
-                    eltSet = self.kFoldTrain(i, eltSet)
+                    for i in range(1, self.k_fold + 1):
+                        logs(f'Fold {i}')
+                        eltSet = self.kFoldTrain(i, eltSet)
 
-                logs(
-                    f'Final '
-                    f'Precision:{avgStd(precision, log=True)},'
-                    f'Sensitivity:{avgStd(sensitivity, log=True)},'
-                    f'dsc:{avgStd(f1, log=True)},'
-                    f'mIou:{avgStd(mIou, log=True)},'
-                    f'{self.dataset} fps:{avgStd(train_times, log=True)},'
-                    f'infer fps:{avgStd(infer_times, log=True)},'
-                    f'Optimal CVG:{avgStd(oc, log=True)},'
-                )
-                end_time = time.time()
-                showTime('Total', start_time, end_time)
+                    logs(
+                        f'Final '
+                        f'Precision:{avgStd(precision, log=True)},'
+                        f'Sensitivity:{avgStd(sensitivity, log=True)},'
+                        f'dsc:{avgStd(f1, log=True)},'
+                        f'mIou:{avgStd(mIou, log=True)},'
+                        f'{self.dataset} fps:{avgStd(train_times, log=True)},'
+                        f'infer fps:{avgStd(infer_times, log=True)},'
+                        f'Optimal CVG:{avgStd(oc, log=True)},'
+                    )
+                    end_time = time.time()
+                    showTime('Total', start_time, end_time)
+                except Exception as e:
+                    logs(f'Error {e} in {model} {loss}')
+                    continue

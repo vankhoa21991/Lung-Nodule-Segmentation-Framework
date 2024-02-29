@@ -103,7 +103,7 @@ class GC(nn.Module):
 train = True
 dataset = 'luna'
 log_name = 'eva'
-mode = '3d'  # 2d,3d
+mode = '2d'  # 2d,3d
 device = 'cuda:0'  #
 server = ' '  #
 

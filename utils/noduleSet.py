@@ -40,7 +40,7 @@ class noduleSet(Dataset):
 
         if self.show:
             fig, plots = plt.subplots(1, 2)
-            if self.mode[1] == '2d':
+            if self.mode == '2d':
                 plots[0].imshow(img[0], cmap='gray')
                 plots[1].imshow(msk[0], cmap='gray')
             else:
