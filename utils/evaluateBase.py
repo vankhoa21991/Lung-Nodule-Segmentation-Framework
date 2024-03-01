@@ -16,7 +16,7 @@ from utils.helper import get_model2d, get_model3d, set_init, load_model_k_checkp
 from utils.logger import logs
 from utils.noduleSet import noduleSet
 from utils.writer import Writer
-
+from utils.exporter import Exporter
 
 class evaluateBase(GC):
     """
@@ -30,6 +30,8 @@ class evaluateBase(GC):
         self.pth_path = None
         self.model_lists = model_lists
         self.loss_lists = ['dice', 'bce', 'focal']
+        self.writer = Writer(self.dataset)
+
         logs(f'mode {self.mode}')
 
     def kFoldMain(self, k, writer, label=None):
@@ -57,7 +59,12 @@ class evaluateBase(GC):
                 preds = model(img)
                 preds = torch.sigmoid(preds)
                 preds = (preds > 0.5).float()
-                metrics(preds, msk)
+
+                self.exporter.export2d(img, msk, preds, data['name'], self.mode, self.dataset, self.model_name, self.loss_name)
+
+                sensitivity, precision, mIou, f1_score = metrics(preds, msk)
+                self.writer.add_row(self.mode, self.dataset, self.model_name, self.loss_name, data['name'],
+                                    precision, sensitivity, f1_score, mIou)
 
         model.eval()
         fprecision, fsensitivity, ff1, fmIou = metrics.evluation(fold)
@@ -129,3 +136,4 @@ class evaluateBase(GC):
                         writer(avg=True, )  # 五折交叉验证求均值
                     writer.update(self.model_name)  # 不同loss
                     writer.save(self.model_name)
+        self.writer.save_df()

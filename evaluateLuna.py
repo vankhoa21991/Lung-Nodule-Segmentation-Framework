@@ -8,7 +8,7 @@
 from configs import config
 from utils.evaluateBase import evaluateBase
 from utils.helper import getAllAttrs
-
+from utils.exporter import Exporter
 
 class evaluateLuna(evaluateBase):
 
@@ -20,7 +20,7 @@ class evaluateLuna(evaluateBase):
             self.seg_path = config.seg_path_luna_2d
         else:
             self.seg_path = config.seg_path_luna_3d
-
+        self.exporter = Exporter(self.seg_path)
         self.run(labels)
 
 

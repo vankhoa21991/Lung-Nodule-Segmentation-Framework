@@ -27,7 +27,7 @@ import pandas as pd
 import pylidc as pl
 from pylidc.utils import consensus
 from torch import nn
-
+import matplotlib.pyplot as plt
 from configs import config
 from utils.helper import showTime, fliter, img_crop_or_fill, resample2d, getAllAttrs
 from utils.resample.resample import resample_patient
@@ -352,13 +352,24 @@ class FindLunaNodule(nn.Module):
 
         while True:
             randomN = random.randint(0, 100)
-            lesion_name = self.seg_path2d + f'{name}_{attrs[1]}_{attrs[0][0]}_{attrs[0][1]}_{attrs[0][2]}_{attrs[0][3]}' \
+            file_name = f'{name}_{attrs[1]}_{attrs[0][0]}_{attrs[0][1]}_{attrs[0][2]}_{attrs[0][3]}' \
                                             f'_{attrs[0][4]}_{attrs[0][5]}_{attrs[0][6]}_{attrs[0][7]}_{attrs[0][8]}' \
-                                            f'_{randomN}.npy'
+                                            f'_{randomN}'
+            lesion_name = self.seg_path2d + file_name + '.npy'
             if not os.path.exists(lesion_name):
                 break
         lesion = np.concatenate((img[np.newaxis, ...], mask[np.newaxis, ...]))
         np.save(lesion_name, lesion)
+
+        fig, plots = plt.subplots(1, 2)
+        plots[0].imshow(img, cmap='gray')
+        plots[0].set_xlabel('image')
+        plots[1].imshow(mask, cmap='gray')
+        plots[1].set_xlabel('ground truth')
+        plt.savefig(f'{self.seg_path2d}{file_name}.png')
+        plt.close()
+        plt.clf()
+
         print(name)
 
     def save3D(self, name, vol, nodules, spacing, attrs):

@@ -41,7 +41,20 @@ class Writer(object):
         self.MSD = []
         self.oneFoldHD = []
         self.oneFoldMSD = []
-
+        self.df = pd.DataFrame(columns=['mode', 'dataset', 'model_name', 'loss_name', 'file_name',
+                        'precision', 'sensitivity', 'dsc', 'mIou'])
+    def add_row(self,mode,dataset,model_name,loss_name,file_name,precision,sensitivity,dsc,mIou):
+        self.df.append({'mode':mode, 'dataset':dataset,
+                        'model_name':model_name,
+                        'loss_name':loss_name,
+                        'file_name':file_name,
+                        'precision':precision,
+                        'sensitivity':sensitivity,
+                        'dsc':dsc,
+                        'mIou':mIou}, ignore_index=True)
+    def save_df(self):
+        os.makedirs(self.csv_path + '/evaluate/', exist_ok=True)
+        self.df.to_csv(f'{self.csv_path}/evaluate/{self.dataset}_all.csv')
     @singledispatch
     def __call__(self, dice=None, hd=None, msd=None, avg=False):
         if avg:

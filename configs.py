@@ -87,10 +87,12 @@ class GC(nn.Module):
         os.makedirs(self.csv_path, exist_ok=True)
 
     def SetDatasetPath(self):
-        self.seg_path_luna_3d = f'{self.basePath}/$segmentation/seg_luna_3d/'
-        self.seg_path_luna_2d = f'{self.basePath}/$segmentation/seg_luna_2d/'
-        self.seg_path_lidc_3d = f'{self.basePath}/$segmentation/seg_lidc_3d/'
-        self.seg_path_lidc_2d = f'{self.basePath}/$segmentation/seg_lidc_2d/'
+        data = 'test'
+        data = '$segmentation'
+        self.seg_path_luna_3d = f'{self.basePath}/{data}/seg_luna_3d/'
+        self.seg_path_luna_2d = f'{self.basePath}/{data}/seg_luna_2d/'
+        self.seg_path_lidc_3d = f'{self.basePath}/{data}/seg_lidc_3d/'
+        self.seg_path_lidc_2d = f'{self.basePath}/{data}/seg_lidc_2d/'
 
     def SetPthPath(self, ):
         self.pth_luna_path = f'{self.basePath}/pth_luna/'

@@ -39,12 +39,21 @@ class Metrics(nn.Module):
         labels = labels.type(torch.IntTensor)
         # todo 非库方法
         # precision, recall, dice, pixel_acc, specificity, mIou = self._calculate_overlap_metrics(labels, preds)
+        sensitivity, precision, mIou, f1_score = self.calculate_metrics(preds, labels)
 
-        self.sensitivity.append(self.numDeal(torchmetrics.functional.recall(preds, labels).data, self.sensitivity))
-        self.precision.append(self.numDeal(torchmetrics.functional.precision(preds, labels).data, self.precision))
-        self.mIou.append(self.numDeal(torchmetrics.functional.jaccard_index(preds, labels, 2).data, self.mIou))
-        self.f1_score.append(self.numDeal(torchmetrics.functional.f1_score(preds, labels).data, self.f1_score))
+        self.sensitivity.append(sensitivity)
+        self.precision.append(precision)
+        self.mIou.append(mIou)
+        self.f1_score.append(f1_score)
 
+        return sensitivity, precision, mIou, f1_score
+
+    def calculate_metrics(self, preds, labels):
+        sensitivity = self.numDeal(torchmetrics.functional.recall(preds, labels).data, self.sensitivity)
+        precision = self.numDeal(torchmetrics.functional.precision(preds, labels).data, self.precision)
+        mIou = self.numDeal(torchmetrics.functional.jaccard_index(preds, labels, 2).data, self.mIou)
+        f1_score = self.numDeal(torchmetrics.functional.f1_score(preds, labels).data, self.f1_score)
+        return sensitivity, precision, mIou, f1_score
     def numDeal(self, nums, lists):
         if np.isnan(nums):
             logs('exist nan')

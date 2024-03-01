@@ -5,7 +5,9 @@
 # Description：
 """
 import SimpleITK as sitk
+import matplotlib
 import matplotlib.pyplot as plt
+matplotlib.use('Agg')
 import numpy as np
 import torch
 from torch.utils.data import Dataset
@@ -46,7 +48,7 @@ class noduleSet(Dataset):
             else:
                 plots[0].imshow(img[:, :, 0], cmap='gray')
                 plots[1].imshow(msk[:, :, 0], cmap='gray')
-            plt.show()
+            plt.savefig(f'{config.seg_path}/{img_name}.png')
 
         return {
             'name': img_name,

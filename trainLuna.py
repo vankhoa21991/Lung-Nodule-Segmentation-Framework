@@ -17,6 +17,7 @@ class trainLuna(trainBase):
             self.seg_path = self.seg_path_luna_2d
         else:
             self.seg_path = self.seg_path_luna_3d
+
         self.run()
 
 
