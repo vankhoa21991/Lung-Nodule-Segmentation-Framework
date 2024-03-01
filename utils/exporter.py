@@ -26,3 +26,19 @@ class Exporter:
 		plots[2].set_xlabel('prediction')
 		plt.savefig(f'{output_dir}/{name[0]}.png')
 		plt.close()
+
+	def export3d(self, img, msk, pred, name, mode, dataset, model_name, loss_name):
+		output_dir = Path(self.output_dir) / 'export' / f'{mode}_{dataset}_{model_name}_{loss_name}'
+		os.makedirs(output_dir, exist_ok=True)
+		if isinstance(img, torch.Tensor):
+			img = img.cpu().detach().numpy().squeeze()
+			msk = msk.cpu().detach().numpy().squeeze()
+			pred = pred.cpu().detach().numpy().squeeze()
+
+		img = sitk.GetImageFromArray(img)
+		msk = sitk.GetImageFromArray(msk)
+		pred = sitk.GetImageFromArray(pred)
+
+		sitk.WriteImage(img, f'{output_dir}/{name[0]}_img.nii')
+		sitk.WriteImage(msk, f'{output_dir}/{name[0]}_msk.nii')
+		sitk.WriteImage(pred, f'{output_dir}/{name[0]}_pred.nii')
