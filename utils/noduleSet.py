@@ -30,7 +30,7 @@ class noduleSet(Dataset):
 
     def __getitem__(self, idx):
 
-        img_name = self.lists[idx].split('.')[-2]
+        img_name = self.lists[idx].split('/')[-1].split('.npy')[0]
 
         data = np.load(self.lists[idx])
 
