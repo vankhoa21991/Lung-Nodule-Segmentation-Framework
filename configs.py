@@ -38,7 +38,7 @@ class GC(nn.Module):
     """超参数"""
     device = None
     num_worker = 8
-    epochs = 2
+    epochs = 100
     show = False
     val_domain = 0.2
     train_domain = 0.8
@@ -105,7 +105,7 @@ class GC(nn.Module):
 train = True
 dataset = 'luna'
 log_name = 'eva'
-mode = '3d'  # 2d,3d
+mode = '2d'  # 2d,3d
 device = 'cuda:0'  #
 server = ' '  #
 

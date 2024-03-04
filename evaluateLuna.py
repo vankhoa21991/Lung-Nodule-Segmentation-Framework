@@ -28,13 +28,21 @@ if __name__ == '__main__':
     config.train = False
 
     loss_lists = ['dice', 'bce', 'focal']  #
-    model2d = ['unet', 'raunet', 'unetpp', 'cpfnet', 'unet3p', 'sgunet', 'bionet',
-               'uctransnet', 'utnet', 'swinunet', 'unext']
-    model3d = ['unet', 'resunet', 'vnet', 'ynet', 'unetpp', 'reconnet', 'transbts', 'wingsnet', 'unetr', ]
+    model2d = ['unet', 'unetpp', 'unet3p',
+            #    'raunet', 'cpfnet',  'sgunet', 'bionet',
+            #    'uctransnet', 'utnet', 'swinunet', 'unext'
+               ]
+    
+    model3d = ['unet', 
+            #    'resunet', 'vnet', 'ynet', 'unetpp', 'reconnet', 'transbts', 'wingsnet', 'unetr', 
+               ]
 
 
     mode = config.mode
-    evaluateLuna(model3d, None, ).to(config.device)  # 整体评估，读入全部数据
+    if mode == '2d':
+        evaluateLuna(model2d, None, ).to(config.device)  # 整体评估，读入全部数据
+    else:
+        evaluateLuna(model3d, None, ).to(config.device)  # 整体评估，读入全部数据
 
     # for labels in getAllAttrs(True).values():  # todo 分项评估
     #     evaluateLuna(model3d, labels).to(config.device)
