@@ -71,8 +71,8 @@ class GC(nn.Module):
         self.log_name = log_name
         self.mode = mode
         self.server = server
-        self.basePath = '/mnt/datalake/DS-lake/vankhoa/LUNA16/framework'  # project path
-
+        # self.basePath = '/mnt/datalake/DS-lake/vankhoa/LUNA16/framework'  # project path
+        self.basePath = '/home/vankhoa@median.cad/datasets/MedDec/Task032_LIDC2d'
         self.SetDatasetPath()
         self.SetPthPath()
 
@@ -88,14 +88,14 @@ class GC(nn.Module):
 
     def SetDatasetPath(self):
         data = 'test'
-        data = '$segmentation'
+        data = 'segmentation'
         self.seg_path_luna_3d = f'{self.basePath}/{data}/seg_luna_3d/'
         self.seg_path_luna_2d = f'{self.basePath}/{data}/seg_luna_2d/'
         self.seg_path_lidc_3d = f'{self.basePath}/{data}/seg_lidc_3d/'
         self.seg_path_lidc_2d = f'{self.basePath}/{data}/seg_lidc_2d/'
 
     def SetPthPath(self, ):
-        self.pth_luna_path = f'{self.basePath}/pth_luna/'
+        self.pth_luna_path = f'{self.basePath}/pth_luna_test/'
         self.pth_lidc_path = f'{self.basePath}/pth_lidc/'
 
 

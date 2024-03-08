@@ -361,12 +361,13 @@ class FindLunaNodule(nn.Module):
         lesion = np.concatenate((img[np.newaxis, ...], mask[np.newaxis, ...]))
         np.save(lesion_name, lesion)
 
+        os.makedirs(f'{self.seg_path2d}/png', exist_ok=True)
         fig, plots = plt.subplots(1, 2)
         plots[0].imshow(img, cmap='gray')
         plots[0].set_xlabel('image')
         plots[1].imshow(mask, cmap='gray')
         plots[1].set_xlabel('ground truth')
-        plt.savefig(f'{self.seg_path2d}{file_name}.png')
+        plt.savefig(f'{self.seg_path2d}/png/{file_name}.png')
         plt.close()
         plt.clf()
 

@@ -25,7 +25,7 @@ if __name__ == '__main__':
 
     loss_lists = ['dice', 'bce', 'focal']  #
     model2d = [
-                # 'unet', 'raunet', 'unetpp',
+                'unet', 'raunet', 'unetpp',
                'cpfnet', 'unet3p', 'sgunet', 'bionet',
                'uctransnet', 'utnet', 'swinunet', 'unext'
                ]
